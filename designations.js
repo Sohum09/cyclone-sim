@@ -602,6 +602,26 @@ DesignationSystem.northIndianOcean = new DesignationSystem({
     displayName: 'North Indian Ocean',
     numEnable: false,
     mainLists: [
+        ['Nisarga','Gati','Nivar','Burevi','Tauktae','Yaas','Gulab','Shaheen','Jawad','Asani','Sitrang','Mandous','Mocha'],
+        ['Biparjoy','Tej','Hamoon','Midhili','Michuang','Remal','Asna','Dana','Fengal','Shakhti','Montha','Senyar','Ditwah'],
+        ['Arnab','Murasu','Akvan','Kaani','Ngamann','Sail','Sahab','Lulu','Ghazeer','Gigum','Thianyot','Afoor','Diksam'],
+        ['Upakul','Aag','Sepand','Odi','Kyarthit','Naseem','Afshan','Mouj','Asif','Gagana','Bulan','Nahhaam','Sira'],
+        ['Barshon','Vyom','Booran','Kenau','Sapakyee','Muzn','Manahil','Suhail','Sidrah','Verambha','Phutala','Quffal','Bakhur'],
+        ['Rajani','Jhar','Anahita','Endheri','Wetwun','Sadeem','Shujana','Sadaf','Hareed','Garjana','Aiyara','Daaman','Ghwyzi'],
+        ['Nishith','Probaho','Azar','Riyau','Mwaihout','Dima','Parwaz','Reem','Faid','Neeba','Saming','Deem','Hawf'],
+        ['Urmi','Neer','Pooyan','Guruva','Kywe','Manjour','Zannata','Rayhan','Kaseer','Ninnada','Kraison','Gargoor','Balhaf'],
+        ['Meghala','Prabhanjan','Arsham','Kurangi','Pinku','Rukam','Sarsar','Anbar','Nakheel','Viduli','Matcha','Khubb','Brom'],
+        ['Samiron','Ghurni','Hengame','Kuredhi','Yinkaung','Watad','Badban','Oud','Haboob','Ogha','Mahingsa','Degl','Shuqra'],
+        ['Pratikul','Ambud','Savas','Horangu','Linyone','Al-jarz','Sarrab','Bahar','Bareq','Salitha','Phraewa','Athmad','Fartak'],
+        ['Sarobor','Jaladhi','Tahamtan','Thundi','Kyeekan','Rabab','Gulnar','Seef','Alreem','Rivi','Asuri','Boom','Darsah'],
+        ['Mahanisha','Vega','Toofan','Faana','Bautphat','Raad','Waseq','Fanar','Wabil','Rudu','Thara','Saffar','Samhah']
+    ]
+});
+
+DesignationSystem.northIndianOcean2004 = new DesignationSystem({
+    displayName: 'North Indian Ocean (2004-2020)',
+    numEnable: false,
+    mainLists: [
         ['Onil','Agni','Hibaru','Pyarr','Baaz','Fanoos','Mala','Mukda'],
         ['Ogni','Akash','Gonu','Yemyin','Sidr','Nargis','Rashmi','Khai-Muk'],
         ['Nisha','Bijli','Aila','Phyan','Ward','Laila','Bandu','Phet'],
@@ -691,6 +711,7 @@ DesignationSystem.presetDesignationSystems = [
     DesignationSystem.PAGASA1963,
     DesignationSystem.PAGASA2001,
     DesignationSystem.northIndianOcean,
+    DesignationSystem.northIndianOcean2004,
     DesignationSystem.australianRegionBoM,
     DesignationSystem.southPacific,
     DesignationSystem.southWestIndianOcean,
