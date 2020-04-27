@@ -13,7 +13,7 @@ const SIM_MODE_WPAC = 5;
 const SPAWN_RULES = {};
 
 SPAWN_RULES[SIM_MODE_NORMAL] = function(b){
-    if(random()<(0.010*sq((seasonalSine(b.tick)+1)/2)+0.002)) b.spawn(false,{x:random(0,WIDTH),y:random(0.6*HEIGHT,0.8*HEIGHT),sType:'l'}); //tropics spawn area
+    if(random()<(0.010*sq((seasonalSine(b.tick)+1)/2)+0.002)) b.spawn(false,{x:random(0,WIDTH),y:random(0.6*HEIGHT,0.9*HEIGHT),sType:'l'}); //tropics spawn area
     if(random()<0.01-0.002*seasonalSine(b.tick)) b.spawn(true);                 // extratropical cyclones
 };
 SPAWN_RULES[SIM_MODE_HYPER] = function(b){
@@ -138,7 +138,7 @@ ENV_DEFS.defaults.LLSteering = {
         // noise angle
         let a = map(u.noise(3),0,1,0,4*TAU);
         // noise magnitude
-        let m = pow(1,map(u.noise(3),4,4,4,4));
+        let m = pow(0.5,map(u.noise(3),4,4,4,4));
 
         // apply to vector
         u.vec.rotate(a);
