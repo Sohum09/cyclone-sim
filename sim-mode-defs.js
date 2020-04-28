@@ -312,8 +312,8 @@ ENV_DEFS.defaults.SSTAnomaly = {
     version: 0,
     mapFunc: (u,x,y,z)=>{
         let v = u.noise(0);
-        v = v*2;
-        let i = v<1 ? -1 : 1;
+        v = v*2.125;
+        let i = v<1 ? -0.7 : 0.7;
         v = 1-abs(1-v);
         if(v===0) v = 0.000001;
         v = log(v);
@@ -417,7 +417,7 @@ ENV_DEFS.defaults.SST = {
     modifiers: {
         offSeasonPolarTemp: -3,
         peakSeasonPolarTemp: 0,
-        offSeasonTropicsTemp: 25,
+        offSeasonTropicsTemp: 24,
         peakSeasonTropicsTemp: 27
     }
 };
