@@ -13,7 +13,7 @@ const SIM_MODE_WPAC = 5;
 const SPAWN_RULES = {};
 
 SPAWN_RULES[SIM_MODE_NORMAL] = function(b){
-    if(random()<(0.015*sq((seasonalSine(b.tick)+1)/2)+0.002)) b.spawn(false,{x:random(0,WIDTH),y:random(0.6*HEIGHT,0.85*HEIGHT),sType:'l'}); //tropics spawn area
+    if(random()<(0.0090*sq((seasonalSine(b.tick)+1)/2)+0.002)) b.spawn(false,{x:random(0,WIDTH),y:random(0.6*HEIGHT,0.85*HEIGHT),sType:'l'}); //tropics spawn area
     if(random()<0.01-0.002*seasonalSine(b.tick)) b.spawn(true);                 // extratropical cyclones
 };
 SPAWN_RULES[SIM_MODE_HYPER] = function(b){
@@ -31,7 +31,7 @@ SPAWN_RULES[SIM_MODE_MEGABLOBS] = function(b){
 SPAWN_RULES[SIM_MODE_EXPERIMENTAL] = SPAWN_RULES[SIM_MODE_HYPER];
 
 SPAWN_RULES[SIM_MODE_WPAC] = function(b){
-    if(random()<0.015) b.spawn(false,{x:random(0.1*WIDTH,0.7*WIDTH),y:random(0.7*HEIGHT,0.8*HEIGHT),sType:'l'}); //tropics spawn area
+    if(random()<0.0105) b.spawn(false,{x:random(0.1*WIDTH,0.7*WIDTH),y:random(0.7*HEIGHT,0.8*HEIGHT),sType:'l'}); //tropics spawn area
     if(random()<0.01-0.002*seasonalSine(b.tick)) b.spawn(true);                 // extratropical cyclones
 };
 
@@ -476,7 +476,7 @@ ENV_DEFS[SIM_MODE_WPAC].SST = {
         offSeasonPolarTemp: -3,
         peakSeasonPolarTemp: 0,
         offSeasonTropicsTemp: 27,
-        peakSeasonTropicsTemp: 29.5,
+        peakSeasonTropicsTemp: 30.5,
     }
 };   
 
