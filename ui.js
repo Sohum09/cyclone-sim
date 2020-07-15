@@ -279,6 +279,7 @@ UI.init = function(){
     },false);
     loadMenu = new UI(null,0,0,WIDTH,HEIGHT,undefined,undefined,false);
     settingsMenu = new UI(null,0,0,WIDTH,HEIGHT,undefined,undefined,false);
+    let desigSystemEditor = new UI(null,0,0,WIDTH,HEIGHT,undefined,undefined,false);
     primaryWrapper = new UI(null,0,0,WIDTH,HEIGHT,function(s){
         if(UI.viewBasin instanceof Basin){
             let basin = UI.viewBasin;
@@ -336,43 +337,45 @@ UI.init = function(){
         if(UI.viewBasin instanceof Basin){
             let basin = UI.viewBasin;
             if(basin.godMode && keyIsPressed && basin.viewingPresent()) {
-                let g = {x: getMouseX(), y: getMouseY()};
-                if(key === "l" || key === "L"){
-                    g.sType = "l";
-                }else if(key === "d"){
-                    g.sType = "d";
-                }else if(key === "D"){
-                    g.sType = "sd";
-                }else if(key === "s"){
-                    g.sType = "s";
-                }else if(key === "S"){
-                    g.sType = "ss";
-                }else if(key === "1"){
-                    g.sType = "1";
-                }else if(key === "2"){
-                    g.sType = "2";
-                }else if(key === "3"){
-                    g.sType = "3";
-                }else if(key === "4"){
-                    g.sType = "4";
-                }else if(key === "5"){
-                    g.sType = "5";
-                }else if(key === "6"){
-                    g.sType = "6";
-                }else if(key === "7"){
-                    g.sType = "7";
-                }else if(key === "8"){
-                    g.sType = "8";
-                }else if(key === "9"){
-                    g.sType = "9";
-                }else if(key === "0"){
-                    g.sType = "10";
-                }else if(key === "y" || key === "Y"){
-                    g.sType = "y";
-                }else if(key === "x" || key === "X"){
-                    g.sType = "x";
-                }else return;
-                basin.spawn(false,g);
+                if(['l','x','d','D','s','S','1','2','3','4','5','6','7','8','9','0','y'].includes(key))
+                    basin.spawnArchetype(key,getMouseX(),getMouseY());
+                // let g = {x: getMouseX(), y: getMouseY()};
+                // if(key === "l" || key === "L"){
+                //     g.sType = "l";
+                // }else if(key === "d"){
+                //     g.sType = "d";
+                // }else if(key === "D"){
+                //     g.sType = "sd";
+                // }else if(key === "s"){
+                //     g.sType = "s";
+                // }else if(key === "S"){
+                //     g.sType = "ss";
+                // }else if(key === "1"){
+                //     g.sType = "1";
+                // }else if(key === "2"){
+                //     g.sType = "2";
+                // }else if(key === "3"){
+                //     g.sType = "3";
+                // }else if(key === "4"){
+                //     g.sType = "4";
+                // }else if(key === "5"){
+                //     g.sType = "5";
+                // }else if(key === "6"){
+                //     g.sType = "6";
+                // }else if(key === "7"){
+                //     g.sType = "7";
+                // }else if(key === "8"){
+                //     g.sType = "8";
+                // }else if(key === "9"){
+                //     g.sType = "9";
+                // }else if(key === "0"){
+                //     g.sType = "10";
+                // }else if(key === "y" || key === "Y"){
+                //     g.sType = "y";
+                // }else if(key === "x" || key === "X"){
+                //     g.sType = "x";
+                // }else return;
+                // basin.spawn(false,g);
             }else if(basin.viewingPresent()){
                 let mVector = createVector(getMouseX(),getMouseY());
                 for(let i=basin.activeSystems.length-1;i>=0;i--){
@@ -423,7 +426,7 @@ UI.init = function(){
         text(TITLE,0,0);
         textSize(18);
         textStyle(ITALIC);
-        text("The realistic tropical cyclone simulator.",0,40);
+        text("Simulate your own monster storms!",0,40);
     });
 
     mainMenu.append(false,WIDTH/2-100,HEIGHT/2-20,200,40,function(s){    // "New Basin" button
@@ -868,6 +871,94 @@ UI.init = function(){
         }
     };
 
+    // designation system editor
+
+    desigSystemEditor.sub = DEFAULT_MAIN_SUBBASIN;
+    let desig_editor_prefix_box;
+    let desig_editor_suffix_box;
+    let refresh_desig_editor = ()=>{
+        let sb = UI.viewBasin.subBasins[desigSystemEditor.sub];
+        if(sb && sb.designationSystem && sb.designationSystem.numbering.enabled){
+            desig_editor_prefix_box.value = sb.designationSystem.numbering.prefix;
+            desig_editor_suffix_box.value = sb.designationSystem.numbering.suffix;
+        }
+        else{
+            desig_editor_prefix_box.value = '';
+            desig_editor_suffix_box.value = '';
+        }
+    };
+
+    // title text
+    desigSystemEditor.append(false,WIDTH/2,HEIGHT/16,0,0,s=>{
+        fill(COLORS.UI.text);
+        noStroke();
+        textAlign(CENTER,CENTER);
+        textSize(36);
+        text("Designations Editor",0,0);
+    });
+
+    // sub-basin selector
+    let desig_editor_sb_selector = desigSystemEditor.append(false,WIDTH/2-150,HEIGHT/8,300,0,s=>{
+        let txt = 'Editing sub-basin: ';
+        let sb = UI.viewBasin.subBasins[desigSystemEditor.sub];
+        if(sb instanceof SubBasin)
+            txt += sb.getDisplayName();
+        textAlign(LEFT,CENTER);
+        textSize(20);
+        text(txt,0,15);
+    });
+    
+    desig_editor_sb_selector.append(false,-40,0,30,10,s=>{ // next sub-basin button
+        s.button('',true);
+        triangle(15,2,23,8,7,8);
+    },()=>{
+        do{
+            desigSystemEditor.sub++;
+            if(desigSystemEditor.sub > 255)
+                desigSystemEditor.sub = 0;
+        }while(!(UI.viewBasin.subBasins[desigSystemEditor.sub] instanceof SubBasin));
+        refresh_desig_editor();
+    }).append(false,0,20,30,10,s=>{ // prev sub-basin button
+        s.button('',true);
+        triangle(15,8,23,2,7,2);
+    },()=>{
+        do{
+            desigSystemEditor.sub--;
+            if(desigSystemEditor.sub < 0)
+                desigSystemEditor.sub = 255;
+        }while(!(UI.viewBasin.subBasins[desigSystemEditor.sub] instanceof SubBasin));
+        refresh_desig_editor();
+    });
+
+    let desig_editor_prefix_section = desig_editor_sb_selector.append(false,0,40,0,0,s=>{
+        text('Prefix:',0,15);
+    });
+
+    desig_editor_prefix_box = desig_editor_prefix_section.append(false,100,0,200,30,[18,6,()=>{
+        let sb = UI.viewBasin.subBasins[desigSystemEditor.sub];
+        if(sb instanceof SubBasin && sb.designationSystem && sb.designationSystem.numbering.enabled)
+            sb.designationSystem.numbering.prefix = desig_editor_prefix_box.value;
+    }]);
+
+    let desig_editor_suffix_section = desig_editor_prefix_section.append(false,0,40,0,0,s=>{
+        text('Suffix:',0,15);
+    });
+
+    desig_editor_suffix_box = desig_editor_suffix_section.append(false,100,0,200,30,[18,6,()=>{
+        let sb = UI.viewBasin.subBasins[desigSystemEditor.sub];
+        if(sb instanceof SubBasin && sb.designationSystem && sb.designationSystem.numbering.enabled)
+            sb.designationSystem.numbering.suffix = desig_editor_suffix_box.value;
+    }]);
+
+    desigSystemEditor.append(false,WIDTH/2-150,7*HEIGHT/8-20,300,30,function(s){ // "Done" button
+        s.button("Done",true,20);
+    },function(){
+        desigSystemEditor.sub = DEFAULT_MAIN_SUBBASIN;
+        desigSystemEditor.hide();
+        if(UI.viewBasin instanceof Basin) primaryWrapper.show();
+        else mainMenu.show();
+    });
+
     // primary "in sim" scene
 
     let topBar = primaryWrapper.append(false,0,0,WIDTH,30,function(s){   // Top bar
@@ -1053,7 +1144,7 @@ UI.init = function(){
         let red = false;
         if(basin.env.displaying!==-1){
             let f = basin.env.fieldList[basin.env.displaying];
-            txtStr += f + " -- ";
+            txtStr += basin.env.getDisplayName(f) + " -- ";
             let x;
             let y;
             let S = selectedStorm && selectedStorm.aliveAt(viewTick);
@@ -1072,13 +1163,10 @@ UI.init = function(){
                 if(v===null){
                     txtStr += "Unavailable";
                     red = true;
-                }else if(basin.env.fields[f].isVectorField){
-                    let m = v.mag();
-                    let h = v.heading();
-                    txtStr += "(a: " + (round(h*1000)/1000) + ", m: " + (round(m*1000)/1000) + ")";
-                }else txtStr += round(v*1000)/1000;
+                }else
+                    txtStr += basin.env.formatFieldValue(f,v);
             }
-            txtStr += " @ " + (S ? "selected storm" : "mouse pointer / finger");
+            txtStr += " @ " + (S ? "selected storm" : "pointer");
             if(viewTick<=basin.env.fields[f].accurateAfter){
                 txtStr += ' [MAY BE INACCURATE]';
                 red = true;
@@ -1136,7 +1224,7 @@ UI.init = function(){
                 txt += formTime + " - " + (S.dissipationTime ? dissTime : "currently active");
             }else txt += "N/A";
             txt += "\nPeak pressure: " + (S.peak ? S.peak.pressure : "N/A");
-            txt += "\nWind speed @ peak: " + (S.peak ? S.peak.windSpeed + " kts" : "N/A");
+            txt += "\nPeak wind speed: " + (S.windPeak ? S.windPeak.windSpeed + " kts" : "N/A");
             txt += "\nACE: " + S.ACE;
             txt += "\nDamage: " + damageDisplayNumber(S.damage);
             txt += "\nDeaths: " + S.deaths;
@@ -1455,6 +1543,13 @@ UI.init = function(){
         primaryWrapper.hide();
         settingsMenu.show();
         paused = true;
+    }).append(false,0,30,sideMenu.width-10,25,function(s){   // Designation system editor menu button
+        s.button("Edit Designations",false,15);
+    },function(){
+        refresh_desig_editor();
+        primaryWrapper.hide();
+        desigSystemEditor.show();
+        paused = true;
     }).append(false,0,30,sideMenu.width-10,25,function(s){  // Basin seed button
         s.button('Basin Seed',false,15);
     },function(){
@@ -1715,6 +1810,55 @@ function mbToInHg(mb,rnd){
     let val = mb*0.02953;
     if(rnd) val = round(val/rnd)*rnd;
     return val;
+}
+
+// converts a radians-from-east angle into a degrees-from-north heading with compass direction for display formatting
+function compassHeading(rad){
+    // force rad into range of zero to two-pi
+    if(rad < 0)
+        rad = 2*PI - (-rad % (2*PI));
+    else
+        rad = rad % (2*PI);
+    // convert heading from radians-from-east to degrees-from-north
+    let heading = map(rad,0,2*PI,90,450) % 360;
+    let compass;
+    // calculate compass direction
+    if(heading < 11.25)
+        compass = 'N';
+    else if(heading < 33.75)
+        compass = 'NNE';
+    else if(heading < 56.25)
+        compass = 'NE';
+    else if(heading < 78.75)
+        compass = 'ENE';
+    else if(heading < 101.25)
+        compass = 'E';
+    else if(heading < 123.75)
+        compass = 'ESE';
+    else if(heading < 146.25)
+        compass = 'SE';
+    else if(heading < 168.75)
+        compass = 'SSE';
+    else if(heading < 191.25)
+        compass = 'S';
+    else if(heading < 213.75)
+        compass = 'SSW';
+    else if(heading < 236.25)
+        compass = 'SW';
+    else if(heading < 258.75)
+        compass = 'WSW';
+    else if(heading < 281.25)
+        compass = 'W';
+    else if(heading < 303.75)
+        compass = 'WNW';
+    else if(heading < 326.25)
+        compass = 'NW';
+    else if(heading < 348.75)
+        compass = 'NNW';
+    else
+        compass = 'N';
+    heading = round(heading);
+    return heading + '\u00B0 '/* degree sign */ + compass;
 }
 
 function damageDisplayNumber(d){
